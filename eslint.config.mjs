@@ -1,39 +1,38 @@
+// For more info, see https://github.com/storybookjs/eslint-plugin-storybook#configuration-flat-config-format
+import storybook from "eslint-plugin-storybook";
+
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
 import eslintPluginReact from 'eslint-plugin-react'
 import eslintPluginReactHooks from 'eslint-plugin-react-hooks'
 import globals from 'globals'
 
-export default [
-  { ignores: ['eslint.config.mjs'] },
-  {
-    ...eslintPluginReact.configs.flat.recommended,
-    ...eslintPluginReact.configs.flat['jsx-runtime'],
-    files: ['src/**/*.{js,jsx}'],
-    plugins: {
-      eslintPluginReact,
-      'react-hooks': eslintPluginReactHooks,
+export default [{ ignores: ['eslint.config.mjs'] }, {
+  ...eslintPluginReact.configs.flat.recommended,
+  ...eslintPluginReact.configs.flat['jsx-runtime'],
+  files: ['src/**/*.{js,jsx}'],
+  plugins: {
+    eslintPluginReact,
+    'react-hooks': eslintPluginReactHooks,
+  },
+  languageOptions: {
+    globals: {
+      ...globals.browser,
+      ...globals.node,
     },
-    languageOptions: {
-      globals: {
-        ...globals.browser,
-        ...globals.node,
+    ecmaVersion: 'latest',
+    sourceType: 'module',
+    parserOptions: {
+      ecmaFeatures: {
+        jsx: true,
       },
-      ecmaVersion: 'latest',
-      sourceType: 'module',
-      parserOptions: {
-        ecmaFeatures: {
-          jsx: true,
-        },
-      },
-    },
-    settings: {
-      react: {
-        version: 'detect',
-      },
-    },
-    rules: {
-      ...eslintPluginReactHooks.configs.recommended.rules,
     },
   },
-  eslintPluginPrettierRecommended,
-]
+  settings: {
+    react: {
+      version: 'detect',
+    },
+  },
+  rules: {
+    ...eslintPluginReactHooks.configs.recommended.rules,
+  },
+}, eslintPluginPrettierRecommended, ...storybook.configs["flat/recommended"]];

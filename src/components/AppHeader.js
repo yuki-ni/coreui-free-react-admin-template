@@ -28,12 +28,19 @@ import {
 import { AppBreadcrumb } from './index'
 import { AppHeaderDropdown } from './header/index'
 
-const AppHeader = () => {
+const AppHeader = ({ initialColorMode }) => {
   const headerRef = useRef()
   const { colorMode, setColorMode } = useColorModes('coreui-free-react-admin-template-theme')
 
   const dispatch = useDispatch()
   const sidebarShow = useSelector((state) => state.sidebarShow)
+
+  // Set initial color mode if provided
+  useEffect(() => {
+    if (initialColorMode) {
+      setColorMode(initialColorMode)
+    }
+  }, [initialColorMode, setColorMode])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -51,9 +58,11 @@ const AppHeader = () => {
         <CHeaderToggler
           onClick={() => dispatch({ type: 'set', sidebarShow: !sidebarShow })}
           style={{ marginInlineStart: '-14px' }}
+          aria-label="Toggle sidebar" // Added aria-label for play functions
         >
           <CIcon icon={cilMenu} size="lg" />
         </CHeaderToggler>
+
         <CHeaderNav className="d-none d-md-flex">
           <CNavItem>
             <CNavLink to="/dashboard" as={NavLink}>
@@ -67,6 +76,7 @@ const AppHeader = () => {
             <CNavLink href="#">Settings</CNavLink>
           </CNavItem>
         </CHeaderNav>
+
         <CHeaderNav className="ms-auto">
           <CNavItem>
             <CNavLink href="#">
@@ -84,12 +94,14 @@ const AppHeader = () => {
             </CNavLink>
           </CNavItem>
         </CHeaderNav>
+
         <CHeaderNav>
           <li className="nav-item py-1">
             <div className="vr h-100 mx-2 text-body text-opacity-75"></div>
           </li>
+
           <CDropdown variant="nav-item" placement="bottom-end">
-            <CDropdownToggle caret={false}>
+            <CDropdownToggle caret={false} aria-label="Toggle color mode">
               {colorMode === 'dark' ? (
                 <CIcon icon={cilMoon} size="lg" />
               ) : colorMode === 'auto' ? (
@@ -128,12 +140,15 @@ const AppHeader = () => {
               </CDropdownItem>
             </CDropdownMenu>
           </CDropdown>
+
           <li className="nav-item py-1">
             <div className="vr h-100 mx-2 text-body text-opacity-75"></div>
           </li>
+
           <AppHeaderDropdown />
         </CHeaderNav>
       </CContainer>
+
       <CContainer className="px-4" fluid>
         <AppBreadcrumb />
       </CContainer>
